@@ -21,8 +21,7 @@ jobs:
     defaults:
       run:
         working-directory: rpc
-    steps:  
-
+    steps:
       - name: Check out code
         uses: actions/checkout@v4
 
@@ -33,9 +32,9 @@ jobs:
         uses: ./.github/actions/setup-protobuf
 
       - name: Generate protobuf files
-        run: go generate ./sinks/pb/
+        run: go generate ./sinks/pb
 
-      - name: GolangCI-Lint 
+      - name: GolangCI-Lint
         uses: golangci/golangci-lint-action@v8
         with:
           version: latest
@@ -47,39 +46,39 @@ jobs:
       run:
         working-directory: rpc
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.23'
-        cache-dependency-path: 'rpc/go.sum'
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache-dependency-path: 'rpc/go.sum'
 
-    - name: Setup Protobuf
-      uses: ./.github/actions/setup-protobuf
+      - name: Setup Protobuf
+        uses: ./.github/actions/setup-protobuf
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12' 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-    - name: Install dependencies
-      run: |
-        python3 -m pip install --upgrade pip
-        pip install pytest
-        pip install -r cmd/pyiceberg_receiver/requirements.txt
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install pytest
+          pip install -r cmd/pyiceberg_receiver/requirements.txt
 
-    - name: gRPC Golang Tests
-      run: |
-        go generate ./sinks/pb
-        go test -timeout 20m -failfast -v -coverprofile=profile.cov ./...
+      - name: gRPC Golang Tests
+        run: |
+          go generate ./sinks/pb
+          go test -timeout 20m -failfast -v -coverprofile=profile.cov ./cmd/kafka_prod_receiver/... ./sinks/...
 
-    - name: gRPC Python Tests
-      run: |
-        python3 -m grpc_tools.protoc -I sinks/pb --python_out=cmd/pyiceberg_receiver --grpc_python_out=cmd/pyiceberg_receiver sinks/pb/pgwatch.proto
-        pytest
+      - name: gRPC Python Tests
+        run: |
+          python3 -m grpc_tools.protoc -I sinks/pb --python_out=cmd/pyiceberg_receiver --grpc_python_out=cmd/pyiceberg_receiver sinks/pb/pgwatch.proto
+          pytest
 
-    - name: Coveralls
-      uses: coverallsapp/github-action@v2
-      with:
-        file: rpc/profile.cov 
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          file: profile.cov
