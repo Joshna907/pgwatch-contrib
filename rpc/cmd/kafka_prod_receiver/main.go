@@ -4,7 +4,8 @@ import (
 	"flag"
 	"log"
 
-	"github.com/destrex271/pgwatch3_rpc_server/sinks"
+	"pgwatch-contrib/rpc/sinks"
+
 )
 
 func main() {

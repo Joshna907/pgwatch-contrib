@@ -8,9 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/destrex271/pgwatch3_rpc_server/sinks"
-	"github.com/destrex271/pgwatch3_rpc_server/sinks/pb"
-	testutils "github.com/destrex271/pgwatch3_rpc_server/sinks/test_utils"
+	"pgwatch-contrib/rpc/sinks"
+"pgwatch-contrib/rpc/sinks/pb"
+
+	testutils "pgwatch-contrib/rpc/sinks/test_utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
@@ -87,7 +88,7 @@ func TestKafka_SyncMetricHandler(t *testing.T) {
 	assert.NoError(t, err)
 	time.Sleep(time.Second) // give some time handler
 
-	_, exists := kpr.conn_regisrty[req.GetDBName()]
+	_, exists := kpr.connRegistry[req.GetDBName()]
 	assert.True(t, exists)
 
 	req.Operation = pb.SyncOp_DeleteOp
@@ -95,6 +96,6 @@ func TestKafka_SyncMetricHandler(t *testing.T) {
 	assert.NoError(t, err)
 	time.Sleep(time.Second) // give some time handler
 
-	_, exists = kpr.conn_regisrty[req.GetDBName()]
+	_, exists = kpr.connRegistry[req.GetDBName()]
 	assert.False(t, exists)
 }

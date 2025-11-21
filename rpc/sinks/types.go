@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/destrex271/pgwatch3_rpc_server/sinks/pb"
+	
+	"pgwatch-contrib/rpc/sinks/pb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
